@@ -31,6 +31,7 @@ parser.add_argument("--exp_name", type=str, default="debug", help="Experiment na
 parser.add_argument("--exp_id", type=str, default="", help="Experiment ID")
 parser.add_argument("--cuda", type=bool_flag, default=True, help="Run on GPU")
 parser.add_argument("--export", type=str, default="txt", help="Export embeddings after training (txt / pth)")
+parser.add_argument('--test',type=bool_flag,default=False,help='test flag')
 # data
 parser.add_argument("--src_lang", type=str, default='en', help="Source language")
 parser.add_argument("--tgt_lang", type=str, default='es', help="Target language")
@@ -91,94 +92,99 @@ assert params.dico_eval == 'default' or os.path.isfile(params.dico_eval)
 assert params.export in ["", "txt", "pth"]
 
 # build model / trainer / evaluator
-logger = initialize_exp(params)
-src_emb, tgt_emb, mapping, discriminator = build_model(params, True)
-trainer = Trainer(src_emb, tgt_emb, mapping, discriminator, params)
-evaluator = Evaluator(trainer)
 
 
-"""
-Learning loop for Adversarial Training
-"""
-if params.adversarial:
-    logger.info('----> ADVERSARIAL TRAINING <----\n\n')
 
-    # training loop
-    for n_epoch in range(params.n_epochs):
+if params.test==False:
+    logger = initialize_exp(params)
+    src_emb, tgt_emb, mapping, discriminator = build_model(params, True)
+    trainer = Trainer(src_emb, tgt_emb, mapping, discriminator, params)
+    evaluator = Evaluator(trainer)
+    """
+    Learning loop for Adversarial Training
+    """
+    if params.adversarial:
+        logger.info('----> ADVERSARIAL TRAINING <----\n\n')
 
-        logger.info('Starting adversarial training epoch %i...' % n_epoch)
-        tic = time.time()
-        n_words_proc = 0
-        stats = {'DIS_COSTS': []}
+        # training loop
+        for n_epoch in range(params.n_epochs):
 
-        for n_iter in range(0, params.epoch_size, params.batch_size):
+            logger.info('Starting adversarial training epoch %i...' % n_epoch)
+            tic = time.time()
+            n_words_proc = 0
+            stats = {'DIS_COSTS': []}
 
-            # discriminator training
-            for _ in range(params.dis_steps):
-                trainer.dis_step(stats)
+            for n_iter in range(0, params.epoch_size, params.batch_size):
 
-            # mapping training (discriminator fooling)
-            n_words_proc += trainer.mapping_step(stats)
+                # discriminator training
+                for _ in range(params.dis_steps):
+                    trainer.dis_step(stats)
 
-            # log stats
-            if n_iter % 500 == 0:
-                stats_str = [('DIS_COSTS', 'Discriminator loss')]
-                stats_log = ['%s: %.4f' % (v, np.mean(stats[k]))
-                             for k, v in stats_str if len(stats[k]) > 0]
-                stats_log.append('%i samples/s' % int(n_words_proc / (time.time() - tic)))
-                logger.info(('%06i - ' % n_iter) + ' - '.join(stats_log))
+                # mapping training (discriminator fooling)
+                n_words_proc += trainer.mapping_step(stats)
 
-                # reset
-                tic = time.time()
-                n_words_proc = 0
-                for k, _ in stats_str:
-                    del stats[k][:]
+                # log stats
+                if n_iter % 500 == 0:
+                    stats_str = [('DIS_COSTS', 'Discriminator loss')]
+                    stats_log = ['%s: %.4f' % (v, np.mean(stats[k]))
+                                 for k, v in stats_str if len(stats[k]) > 0]
+                    stats_log.append('%i samples/s' % int(n_words_proc / (time.time() - tic)))
+                    logger.info(('%06i - ' % n_iter) + ' - '.join(stats_log))
 
-        # embeddings / discriminator evaluation
-        to_log = OrderedDict({'n_epoch': n_epoch})
-        evaluator.all_eval(to_log)
-        evaluator.eval_dis(to_log)
+                    # reset
+                    tic = time.time()
+                    n_words_proc = 0
+                    for k, _ in stats_str:
+                        del stats[k][:]
 
-        # JSON log / save best model / end of epoch
-        logger.info("__log__:%s" % json.dumps(to_log))
-        trainer.save_best(to_log, VALIDATION_METRIC)
-        logger.info('End of epoch %i.\n\n' % n_epoch)
+            # embeddings / discriminator evaluation
+            to_log = OrderedDict({'n_epoch': n_epoch})
+            evaluator.all_eval(to_log)
+            evaluator.eval_dis(to_log)
 
-        # update the learning rate (stop if too small)
-        trainer.update_lr(to_log, VALIDATION_METRIC)
-        if trainer.map_optimizer.param_groups[0]['lr'] < params.min_lr:
-            logger.info('Learning rate < 1e-6. BREAK.')
-            break
+            # JSON log / save best model / end of epoch
+            logger.info("__log__:%s" % json.dumps(to_log))
+            trainer.save_best(to_log, VALIDATION_METRIC)
+            logger.info('End of epoch %i.\n\n' % n_epoch)
+
+            # update the learning rate (stop if too small)
+            trainer.update_lr(to_log, VALIDATION_METRIC)
+            if trainer.map_optimizer.param_groups[0]['lr'] < params.min_lr:
+                logger.info('Learning rate < 1e-6. BREAK.')
+                break
 
 
-"""
-Learning loop for Procrustes Iterative Refinement
-"""
-if params.n_refinement > 0:
-    # Get the best mapping according to VALIDATION_METRIC
-    logger.info('----> ITERATIVE PROCRUSTES REFINEMENT <----\n\n')
-    trainer.reload_best()
+    """
+    Learning loop for Procrustes Iterative Refinement
+    """
+    if params.n_refinement > 0:
+        # Get the best mapping according to VALIDATION_METRIC
+        logger.info('----> ITERATIVE PROCRUSTES REFINEMENT <----\n\n')
+        trainer.reload_best()
 
-    # training loop
-    for n_iter in range(params.n_refinement):
+        # training loop
+        for n_iter in range(params.n_refinement):
 
-        logger.info('Starting refinement iteration %i...' % n_iter)
+            logger.info('Starting refinement iteration %i...' % n_iter)
 
-        # build a dictionary from aligned embeddings
-        trainer.build_dictionary()
+            # build a dictionary from aligned embeddings
+            trainer.build_dictionary()
 
-        # apply the Procrustes solution
-        trainer.procrustes()
+            # apply the Procrustes solution
+            trainer.procrustes()
 
-        # embeddings evaluation
-        to_log = OrderedDict({'n_iter': n_iter})
-        evaluator.all_eval(to_log)
+            # embeddings evaluation
+            to_log = OrderedDict({'n_iter': n_iter})
+            evaluator.all_eval(to_log)
 
-        # JSON log / save best model / end of epoch
-        logger.info("__log__:%s" % json.dumps(to_log))
-        trainer.save_best(to_log, VALIDATION_METRIC)
-        logger.info('End of refinement iteration %i.\n\n' % n_iter)
+            # JSON log / save best model / end of epoch
+            logger.info("__log__:%s" % json.dumps(to_log))
+            trainer.save_best(to_log, VALIDATION_METRIC)
+            logger.info('End of refinement iteration %i.\n\n' % n_iter)
 
+elif params.test==True:
+    src_emb, tgt_emb, mapping, discriminator = build_model(params, True)
+    trainer = Trainer(src_emb, tgt_emb, mapping, discriminator, params)
 
 # export embeddings
 if params.export:
