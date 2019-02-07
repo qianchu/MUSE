@@ -50,6 +50,7 @@ For more details on these approaches, please check [here](https://arxiv.org/pdf/
 To learn a mapping between the source and the target space, simply run:
 ```bash
 python supervised.py --src_lang en --tgt_lang es --src_emb data/wiki.en.vec --tgt_emb data/wiki.es.vec --n_refinement 5 --dico_train default
+python supervised.py --src_lang en --tgt_lang zh --src_emb ../../corpora/vocab/en_vocab_muse.parallel.english_elmo.ly-1.word2vec --tgt_emb ../../corpora/vocab/ch_vocab_muse.parallel.chinese_elmo.ly-1.word2vec --n_refinement 5 --dico_train ./data/crosslingual/dictionaries/en-zh.0-5000.txt --emb_dim 1024 --cuda false --dico_eval ./data/crosslingual/dictionaries/en-zh.0-5000.txt
 ```
 By default, *dico_train* will point to our ground-truth dictionaries (downloaded above); when set to "identical_char" it will use identical character strings between source and target languages to form a vocabulary. Logs and embeddings will be saved in the dumped/ directory.
 
