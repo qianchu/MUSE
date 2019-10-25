@@ -36,7 +36,7 @@ if __name__=='__main__':
 
     if args.en2zh_dict:
 
-        with open(parser.en2zh_dict,'r') as dict_in, open(parser.en2zh_dict+'.unsup', 'w') as dict_out:
+        with open(args.en2zh_dict,'r') as dict_in, open(args.en2zh_dict+'.unsup', 'w') as dict_out:
             for line in dict_in:
                 en,zh=line.strip().split()
                 if en in en_dict and zh in zh_dict:
