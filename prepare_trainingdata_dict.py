@@ -36,8 +36,8 @@ def dict_produce(emb_en,emb_zh):
             en_w = zh.split('.')[1]
             zh_w = zh.split('.')[0]
 
-        zh2en[zh_w].append((en_w,zh_w))
-        en2zh[en_w].append((en_w,zh_w))
+        zh2en[zh_w].append([en_w,zh_w])
+        en2zh[en_w].append([en_w,zh_w])
 
 
     remove_extra_wa(zh2en,en2zh)
