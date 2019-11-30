@@ -95,7 +95,7 @@ if __name__=='__main__':
     parser.add_argument("--emb_zh", type=str, help="emb zh")
     parser.add_argument("--en2zh_dict", type=str, default='', help="en2zh dictionary")
     parser.add_argument('--dict_produce', type=bool, default=False, help='produce dictionary to one-to-one mapping')
-    parser.add_argument('--dict_filter', type=str, default=False, help='filter dictionary to one-to-one mapping')
+    parser.add_argument('--dict_filter', type=str, default='', help='filter dictionary to one-to-one mapping')
 
     args=parser.parse_args()
     # with open(parser.en2zh_dict,'r') as dict:
