@@ -56,12 +56,15 @@ def remove_extra_wa(zh2en,en2zh):
             found=False
             wp_list=deepcopy(zh2en[zh_w])
             for wp in wp_list:
+                en_w=wp[1-wp.index(zh_w)]
+
                 if found:
-                    en_w=zh2en[zh_w][0]
-                    zh_w=zh2en[zh_w][1]
+                    # en_w=zh2en[zh_w][0]
+                    # zh_w=zh2en[zh_w][1]
                     zh2en[zh_w].remove(wp)
                     if wp in en2zh[en_w]:
                         en2zh[en_w].remove(wp)
+                    continue
                 found=True
 
 def dict_filter(dict_f,emb_en,emb_zh):
