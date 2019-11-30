@@ -36,14 +36,17 @@ def dict_produce(emb_en,emb_zh):
             en_w = zh.split('.')[1]
             zh_w = zh.split('.')[0]
 
-        zh2en[zh_w].append([en_w,zh_w])
-        en2zh[en_w].append([en_w,zh_w])
+        zh2en[zh_w].append((en_w,zh_w))
+        en2zh[en_w].append((en_w,zh_w))
 
 
     remove_extra_wa(zh2en,en2zh)
     remove_extra_wa(en2zh,zh2en)
 
-    dictionary=list(set(list(en2zh.values())+list(zh2en.values())))
+    en2zh_wps=[wp for w in en2zh for wp in en2zh[w]]
+    zh2en_wps=[wp for w in zh2en for wp in zh2en[w]]
+
+    dictionary=list(set(en2zh_wps+zh2en_wps))
     with open(emb_en+'.dict','w') as f:
         for entry in dictionary:
             f.write('\t'.join(entry))
