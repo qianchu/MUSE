@@ -81,12 +81,12 @@ def dict_filter(dict_f,emb_en,emb_zh):
             dict_list[wp[1]]=True
 
 
-    with open(emb_en,'r') as emb_en, open(emb_zh,'r') as emb_zh, open(emb_en+'.filtered','w') as emb_en_out, open(emb_zh+'.filtered','w') as emb_zh_out:
-        for line in emb_en:
+    with open(emb_en,'r') as emb_en_f, open(emb_zh,'r') as emb_zh_f, open(emb_en+'.filtered','w') as emb_en_out, open(emb_zh+'.filtered','w') as emb_zh_out:
+        for line in emb_en_f:
             en_w=line.split(' ')[0]
             if en_w in dict_list:
                 emb_en_out.write(line)
-        for line in emb_zh:
+        for line in emb_zh_f:
             zh_w=line.split(' ')[0]
             if zh_w in dict_list:
                 emb_zh_out.write(line)
