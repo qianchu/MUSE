@@ -1,5 +1,5 @@
 from collections import defaultdict
-
+from copy import deepcopy
 def process_f(emb):
     w_dict=defaultdict(int)
     counter = 0
@@ -54,7 +54,8 @@ def remove_extra_wa(zh2en,en2zh):
     for zh_w in zh2en:
         if len(zh2en[zh_w])>1:
             found=False
-            for wp in zh2en[zh_w]:
+            wp_list=deepcopy(zh2en[zh_w])
+            for wp in wp_list:
                 if found:
                     en_w=zh2en[zh_w][0]
                     zh_w=zh2en[zh_w][1]
