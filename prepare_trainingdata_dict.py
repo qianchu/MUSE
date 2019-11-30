@@ -49,7 +49,7 @@ def dict_produce(emb_en,emb_zh):
     dictionary=list(set(en2zh_wps+zh2en_wps))
     with open(emb_en+'.dict','w') as f:
         for entry in dictionary:
-            f.write('\t'.join(entry))
+            f.write('\t'.join(entry)+'\n')
     return en2zh, zh2en
 
 
