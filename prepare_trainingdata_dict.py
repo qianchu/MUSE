@@ -34,7 +34,7 @@ def wsd_dict_produce(emb_en,emb_zh):
             if '.' in en:
                 en_w=en.split('.')[0]
             if '.' in zh:
-                zh_w=en.split('.')[1]
+                zh_w=zh.split('.')[1]
 
             wps_plain.append((en_w,zh_w))
 
