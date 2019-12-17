@@ -17,6 +17,40 @@ def process_f(emb):
             emb_f_out.write(line_new)
     return w_dict
 
+def wsd_dict_produce(emb_en,emb_zh):
+    wps_plain=defaultdict(list)
+    wps=defaultdict(list)
+
+    en_vocab=[line.split(' ')[0] for line in open(emb_en,'r')]
+    zh_vocab=[line.split(' ')[0] for line in open(emb_zh,'r')]
+    en_zh=list(zip(en_vocab,zh_vocab))
+    for wp in en_zh:
+        en=wp[0]
+        zh=wp[1]
+        if '.' in en or '.' in zh:
+            en_w=en.split('.')[0]
+            zh_w=en.split('.')[1]
+
+            wps_plain.append((en_w,zh_w))
+            wps.append((en,zh))
+
+
+
+
+
+    wps_plain=[wp for wp in wps_plain]
+    wps=[wp for wp in wps]
+
+    # dictionary=list(set(en2zh_wps+zh2en_wps))
+    with open(emb_en+'.dict','w') as f:
+        for entry in wps:
+            f.write('\t'.join(entry)+'\n')
+
+    with open(emb_en+'.dict.plain','w') as f:
+        for entry in wps_plain:
+            f.write('\t'.join(entry) + '\n')
+
+
 def dict_produce(emb_en,emb_zh):
     en2zh=defaultdict(list)
     zh2en=defaultdict(list)
@@ -103,6 +137,7 @@ if __name__=='__main__':
     parser.add_argument("--en2zh_dict", type=str, default='', help="en2zh dictionary")
     parser.add_argument('--dict_produce', type=bool, default=False, help='produce dictionary to one-to-one mapping')
     parser.add_argument('--dict_filter', type=str, default='', help='filter dictionary to one-to-one mapping')
+    parser.add_argument('--dict_wsd_produce', type=str,default='',help='produce wsd dictionary')
 
     args=parser.parse_args()
     # with open(parser.en2zh_dict,'r') as dict:
@@ -113,6 +148,8 @@ if __name__=='__main__':
     en_dict=process_f(args.emb_en)
     zh_dict=process_f(args.emb_zh)
 
+    if args.dict_wsd_produce:
+        wsd_dict_produce(args.emb_en,args.emb_zh)
     if args.dict_produce:
         dict_produce(args.emb_en,args.emb_zh)
 
