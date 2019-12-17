@@ -1,5 +1,6 @@
 from collections import defaultdict
 from copy import deepcopy
+from random import sample
 def process_f(emb):
     w_dict=defaultdict(int)
     counter = 0
@@ -46,13 +47,16 @@ def wsd_dict_produce(emb_en,emb_zh):
 
 
     # dictionary=list(set(en2zh_wps+zh2en_wps))
-    with open(emb_en+'.dict','w') as f:
-        for entry in wps:
-            f.write('\t'.join(entry)+'\n')
+    for i in range(5):
+        wp_sample=sample(list(range(len(wps))),50)
 
-    with open(emb_en+'.dict.plain','w') as f:
-        for entry in wps_plain:
-            f.write('\t'.join(entry) + '\n')
+        with open(emb_en+'.dict'+str(i),'w') as f:
+            for entry in [wps[i] for i in wp_sample]:
+                f.write('\t'.join(entry)+'\n')
+
+        with open(emb_en+'.dict.plain'+str(i),'w') as f:
+            for entry in [wps_plain[i] for i in wp_sample]:
+                f.write('\t'.join(entry) + '\n')
 
 
 def dict_produce(emb_en,emb_zh):
