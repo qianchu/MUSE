@@ -18,8 +18,8 @@ def process_f(emb):
     return w_dict
 
 def wsd_dict_produce(emb_en,emb_zh):
-    wps_plain=defaultdict(list)
-    wps=defaultdict(list)
+    wps_plain=[]
+    wps=[]
 
     en_vocab=[line.split(' ')[0] for line in open(emb_en,'r')]
     zh_vocab=[line.split(' ')[0] for line in open(emb_zh,'r')]
@@ -43,8 +43,7 @@ def wsd_dict_produce(emb_en,emb_zh):
 
 
 
-    wps_plain=[wp for wp in wps_plain]
-    wps=[wp for wp in wps]
+
 
     # dictionary=list(set(en2zh_wps+zh2en_wps))
     with open(emb_en+'.dict','w') as f:
