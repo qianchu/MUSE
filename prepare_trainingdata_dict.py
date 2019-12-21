@@ -18,9 +18,16 @@ def process_f(emb):
             emb_f_out.write(line_new)
     return w_dict
 
-def wsd_dict_produce(emb_en,emb_zh):
+def wsd_dict_produce(emb_en,emb_zh,dict_test):
     wps_plain=[]
     wps=[]
+    wps_nowsd=[]
+
+    dict_test_lst = {}
+    with open(dict_test) as f:
+        for line in f:
+            en, zh = line.split()
+            dict_test_lst[(en, zh)] = 1
 
     en_vocab=[line.split(' ')[0] for line in open(emb_en,'r')]
     zh_vocab=[line.split(' ')[0] for line in open(emb_zh,'r')]
@@ -38,11 +45,9 @@ def wsd_dict_produce(emb_en,emb_zh):
                 zh_w=zh.split('.')[0]
 
             wps_plain.append((en_w,zh_w))
-
-
-
-
-
+        else:
+            if (en,zh) not in dict_test_lst:
+                wps_nowsd.append((en,zh))
 
 
 
@@ -55,6 +60,10 @@ def wsd_dict_produce(emb_en,emb_zh):
                 f.write('\t'.join(entry)+'\n')
 
         with open(emb_en+'.dict.plain'+str(i),'w') as f:
+            for entry in [wps_plain[i] for i in wp_sample]:
+                f.write('\t'.join(entry) + '\n')
+
+        with open(emb_en+'.dict.plain.nowsd'+str(i),'w') as f:
             for entry in [wps_plain[i] for i in wp_sample]:
                 f.write('\t'.join(entry) + '\n')
 
@@ -146,6 +155,7 @@ if __name__=='__main__':
     parser.add_argument('--dict_produce', action='store_true', help='produce dictionary to one-to-one mapping')
     parser.add_argument('--dict_filter', type=str, default='', help='filter dictionary to one-to-one mapping')
     parser.add_argument('--dict_wsd_produce', action='store_true',help='produce wsd dictionary')
+    parser.add_argument('--dict_test', type=str, help='test dictionary file')
 
     args=parser.parse_args()
     # with open(parser.en2zh_dict,'r') as dict:
@@ -157,7 +167,7 @@ if __name__=='__main__':
     zh_dict=process_f(args.emb_zh)
 
     if args.dict_wsd_produce:
-        wsd_dict_produce(args.emb_en,args.emb_zh)
+        wsd_dict_produce(args.emb_en,args.emb_zh,args.dict_test)
     if args.dict_produce:
         dict_produce(args.emb_en,args.emb_zh)
 
