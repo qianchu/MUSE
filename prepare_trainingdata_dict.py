@@ -64,7 +64,7 @@ def wsd_dict_produce(emb_en,emb_zh,dict_test):
                 f.write('\t'.join(entry) + '\n')
 
         with open(emb_en+'.dict.plain.nowsd'+str(i),'w') as f:
-            for entry in [wps_plain[i] for i in wp_sample]:
+            for entry in [wps_nowsd[i] for i in wp_sample]:
                 f.write('\t'.join(entry) + '\n')
 
 
