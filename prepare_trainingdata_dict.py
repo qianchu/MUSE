@@ -167,6 +167,7 @@ if __name__=='__main__':
     parser.add_argument('--dict_filter', type=str, default='', help='filter dictionary to one-to-one mapping')
     parser.add_argument('--dict_wsd_produce', action='store_true',help='produce wsd dictionary')
     parser.add_argument('--dict_test', type=str, help='test dictionary file')
+    parser.add_argument('--dict_size',type=int, help='dictionary size')
 
     args=parser.parse_args()
     # with open(parser.en2zh_dict,'r') as dict:
@@ -178,7 +179,7 @@ if __name__=='__main__':
     zh_dict=process_f(args.emb_zh)
 
     if args.dict_wsd_produce:
-        wsd_dict_produce(args.emb_en,args.emb_zh,args.dict_test)
+        wsd_dict_produce(args.emb_en,args.emb_zh,args.dict_test,args.dict_size)
     if args.dict_produce:
         dict_produce(args.emb_en,args.emb_zh)
 
