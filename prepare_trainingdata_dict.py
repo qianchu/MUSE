@@ -18,7 +18,7 @@ def process_f(emb):
             emb_f_out.write(line_new)
     return w_dict
 
-def wsd_dict_produce(emb_en,emb_zh,dict_test):
+def wsd_dict_produce(emb_en,emb_zh,dict_test,dict_size):
     wps_plain=[]
     wps=[]
     wps_nowsd=[]
@@ -50,21 +50,32 @@ def wsd_dict_produce(emb_en,emb_zh,dict_test):
                 wps_nowsd.append((en,zh))
 
 
-
+    wps_all=wps_nowsd+wps
+    wps_all_plain=wps_nowsd+wps_plain
     # dictionary=list(set(en2zh_wps+zh2en_wps))
     for i in range(5):
-        wp_sample=sample(list(range(len(wps))),50)
+        wp_sample=sample(list(range(len(wps))),dict_size)
+        wp_nowsd_sample=sample(list(range(len(wps_nowsd))),dict_size)
+        wp_all_sample=sample(list(range(len(wps_all))),dict_size)
 
-        with open(emb_en+'.dict'+str(i),'w') as f:
+        with open('{0}.dict_{1}_{2}'.format(emb_en,str(dict_size),str(i)),'w') as f:
             for entry in [wps[i] for i in wp_sample]:
                 f.write('\t'.join(entry)+'\n')
 
-        with open(emb_en+'.dict.plain'+str(i),'w') as f:
+        with open('{0}.dict.plain_{1}_{2}'.format(emb_en,str(dict_size),str(i)),'w') as f:
             for entry in [wps_plain[i] for i in wp_sample]:
                 f.write('\t'.join(entry) + '\n')
 
-        with open(emb_en+'.dict.plain.nowsd'+str(i),'w') as f:
-            for entry in [wps_nowsd[i] for i in wp_sample]:
+        with open('{0}.dict.plain.nowsd_{1}_{2}'.format(emb_en,str(dict_size),str(i)),'w') as f:
+            for entry in [wps_nowsd[i] for i in wp_nowsd_sample]:
+                f.write('\t'.join(entry) + '\n')
+
+        with open('{0}.dict.all_{1}_{2}'.format(emb_en, str(dict_size), str(i)), 'w') as f:
+            for entry in [wps_all[i] for i in wp_all_sample]:
+                f.write('\t'.join(entry) + '\n')
+
+        with open('{0}.dict.all.plain_{1}_{2}'.format(emb_en, str(dict_size), str(i)), 'w') as f:
+            for entry in [wps_all_plain[i] for i in wp_all_sample]:
                 f.write('\t'.join(entry) + '\n')
 
 
