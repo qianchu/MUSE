@@ -76,7 +76,7 @@ def wsd_dict_produce(emb_en,emb_zh,dict_test,dict_size):
 
 
         with open('{0}.dict.mixed.plain_{1}_{2}'.format(emb_en, str(dict_size), str(i)), 'w') as f:
-            for entry in [wps[i] for i in wp_sample][:int(len(wp_sample)/2)]+[wps_nowsd[i] for i in wp_nowsd_sample][:int(len(wp_nowsd_sample)/2)]:
+            for entry in [wps[i] for i in wp_sample][:int(len(wp_sample)*0.8)]+[wps_nowsd[i] for i in wp_nowsd_sample][:int(len(wp_nowsd_sample)*0.2)]:
                 f.write('\t'.join(entry) + '\n')
 
 
