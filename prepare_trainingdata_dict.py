@@ -75,7 +75,7 @@ def wsd_dict_produce(emb_en,emb_zh,dict_test,dict_size,poly_percent):
                 f.write('\t'.join(entry) + '\n')
 
 
-        with open('{0}.dict.mixed.plain_poly{3}_{1}_{2}'.format(emb_en, str(dict_size), str(i),str(args.percent)), 'w') as f:
+        with open('{0}.dict.mixed.plain_poly{3}_{1}_{2}'.format(emb_en, str(dict_size), str(i),str(poly_percent)), 'w') as f:
             for entry in [wps[i] for i in wp_sample][:int(len(wp_sample)*poly_percent)]+[wps_nowsd[i] for i in wp_nowsd_sample][:int(len(wp_sample)*(1-poly_percent))]:
                 f.write('\t'.join(entry) + '\n')
 
@@ -170,7 +170,7 @@ if __name__=='__main__':
     parser.add_argument('--dict_produce', action='store_true', help='produce dictionary to one-to-one mapping')
     parser.add_argument('--dict_filter', type=str, default='', help='filter dictionary to one-to-one mapping')
     parser.add_argument('--dict_wsd_produce', action='store_true',help='produce wsd dictionary')
-    parser.add_argument('--dict_test', type=str, help='test dictionary file')
+    parser.add_argument('--dict_test', type=str, help='test dictionary file to be excluded from training data')
     parser.add_argument('--dict_size',type=int, help='dictionary size')
     parser.add_argument('--poly_percent',type=float, help='percentage of ambiguous words')
 
