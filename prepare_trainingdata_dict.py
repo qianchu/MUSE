@@ -19,9 +19,9 @@ def process_f(emb):
     return w_dict
 
 def wsd_dict_produce(emb_en,emb_zh,dict_test,dict_size,poly_percent):
-    wps_plain=[]
-    wps=[]
-    wps_nowsd=[]
+    wps_multisense_nowsd=[]
+    wps_multisense_wsd=[]
+    wps_monosense=[]
 
     dict_test_lst = {}
     with open(dict_test) as f:
@@ -36,7 +36,7 @@ def wsd_dict_produce(emb_en,emb_zh,dict_test,dict_size,poly_percent):
         en=wp[0]
         zh=wp[1]
         if '.' in en or '.' in zh:
-            wps.append((en, zh))
+            wps_multisense_wsd.append((en, zh))
             en_w=en
             zh_w=zh
             if '.' in en:
@@ -44,40 +44,52 @@ def wsd_dict_produce(emb_en,emb_zh,dict_test,dict_size,poly_percent):
             if '.' in zh:
                 zh_w=zh.split('.')[0]
 
-            wps_plain.append((en_w,zh_w))
+            wps_multisense_nowsd.append((en_w,zh_w))
         else:
             if (en,zh) not in dict_test_lst:
-                wps_nowsd.append((en,zh))
+                wps_monosense.append((en,zh))
 
 
-    wps_all=wps_nowsd+wps
-    wps_all_plain=wps_nowsd+wps_plain
+    wps_all_wsd=wps_multisense_wsd+wps_monosense
+    wps_all_nowsd=wps_monosense+wps_multisense_nowsd
     # dictionary=list(set(en2zh_wps+zh2en_wps))
     for i in range(5):
-        wp_sample=sample(list(range(len(wps))),dict_size)
-        wp_nowsd_sample=sample(list(range(len(wps_nowsd))),dict_size)
-        wp_all_sample=sample(list(range(len(wps_all))),dict_size)
 
-        with open('{0}.dict_{1}_{2}'.format(emb_en,str(dict_size),str(i)),'w') as f:
-            for entry in [wps[i] for i in wp_sample]:
+        wp_all_wsd_sample=sample(list(range(len(wps_all_wsd))),dict_size)
+        wp_all_nowsd_sample=sample(list(range(len(wps_all_nowsd))),dict_size)
+        wp_multisense_wsd_sample=sample(list(range(len(wps_multisense_wsd))),dict_size)
+        wp_multisense_nowsd_sample=sample(list(range(len(wps_multisense_nowsd))),dict_size)
+        wp_monosense_sample=sample(list(range(len(wps_monosense))),dict_size)
+
+
+
+        with open('{0}.dict.wps_all_wsd.{1}.{2}'.format(emb_en,str(dict_size),str(i)),'w') as f:
+            for entry in [wps_all_wsd[i] for i in wp_all_wsd_sample]:
                 f.write('\t'.join(entry)+'\n')
 
-        with open('{0}.dict.plain_{1}_{2}'.format(emb_en,str(dict_size),str(i)),'w') as f:
-            for entry in [wps_plain[i] for i in wp_sample]:
+        with open('{0}.dict.wps_all_nowsd.{1}.{2}'.format(emb_en,str(dict_size),str(i)),'w') as f:
+            for entry in [wps_all_nowsd[i] for i in wp_all_nowsd_sample]:
                 f.write('\t'.join(entry) + '\n')
 
-        with open('{0}.dict.plain.nowsd_{1}_{2}'.format(emb_en,str(dict_size),str(i)),'w') as f:
-            for entry in [wps_nowsd[i] for i in wp_nowsd_sample]:
+        # with open('{0}.dict.wps_monosense.{1}.{2}'.format(emb_en,str(dict_size),str(i)),'w') as f:
+        #     for entry in [wps_monosense[i] for i in wp_monosense_sample]:
+        #         f.write('\t'.join(entry) + '\n')
+        #
+        # with open('{0}.dict.all_{1}_{2}'.format(emb_en, str(dict_size), str(i)), 'w') as f:
+        #     for entry in [wps_all[i] for i in wp_all_sample]:
+        #         f.write('\t'.join(entry) + '\n')
+
+
+        with open('{0}.dict.wps_mono_multiwsd.poly{3}.{1}.{2}'.format(emb_en, str(dict_size), str(i),str(poly_percent)), 'w') as f:
+            for entry in [wps_multisense_wsd[i] for i in  wp_multisense_wsd_sample][:int(dict_size*poly_percent)]+[wps_monosense[i] for i in wp_monosense_sample][:int(dict_size*(1-poly_percent))]:
                 f.write('\t'.join(entry) + '\n')
 
-        with open('{0}.dict.all_{1}_{2}'.format(emb_en, str(dict_size), str(i)), 'w') as f:
-            for entry in [wps_all[i] for i in wp_all_sample]:
-                f.write('\t'.join(entry) + '\n')
-
-
-        with open('{0}.dict.mixed.plain_poly{3}_{1}_{2}'.format(emb_en, str(dict_size), str(i),str(poly_percent)), 'w') as f:
-            for entry in [wps[i] for i in wp_sample][:int(len(wp_sample)*poly_percent)]+[wps_nowsd[i] for i in wp_nowsd_sample][:int(len(wp_sample)*(1-poly_percent))]:
-                f.write('\t'.join(entry) + '\n')
+        with open('{0}.dict.wps_mono_multinowsd.poly{3}.{1}.{2}'.format(emb_en, str(dict_size), str(i),
+                                                                          str(poly_percent)), 'w') as f:
+                for entry in [wps_multisense_nowsd[i] for i in wp_multisense_nowsd_sample][
+                             :int(dict_size * poly_percent)] + [wps_monosense[i] for i in wp_monosense_sample][
+                                                               :int(dict_size * (1 - poly_percent))]:
+                    f.write('\t'.join(entry) + '\n')
 
 
 
