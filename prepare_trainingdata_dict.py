@@ -18,7 +18,7 @@ def process_f(emb):
             emb_f_out.write(line_new)
     return w_dict
 
-def wsd_dict_produce(emb_en,emb_zh,dict_test,dict_size):
+def wsd_dict_produce(emb_en,emb_zh,dict_test,dict_size,poly_percent):
     wps_plain=[]
     wps=[]
     wps_nowsd=[]
@@ -75,8 +75,8 @@ def wsd_dict_produce(emb_en,emb_zh,dict_test,dict_size):
                 f.write('\t'.join(entry) + '\n')
 
 
-        with open('{0}.dict.mixed.plain_{1}_{2}'.format(emb_en, str(dict_size), str(i)), 'w') as f:
-            for entry in [wps[i] for i in wp_sample][:int(len(wp_sample)*0.9)]+[wps_nowsd[i] for i in wp_nowsd_sample][:int(len(wp_nowsd_sample)*0.1)]:
+        with open('{0}.dict.mixed.plain_poly{3}_{1}_{2}'.format(emb_en, str(dict_size), str(i),str(args.percent)), 'w') as f:
+            for entry in [wps[i] for i in wp_sample][:int(len(wp_sample)*poly_percent)]+[wps_nowsd[i] for i in wp_nowsd_sample][:int(len(wp_sample)*(1-poly_percent))]:
                 f.write('\t'.join(entry) + '\n')
 
 
@@ -172,6 +172,7 @@ if __name__=='__main__':
     parser.add_argument('--dict_wsd_produce', action='store_true',help='produce wsd dictionary')
     parser.add_argument('--dict_test', type=str, help='test dictionary file')
     parser.add_argument('--dict_size',type=int, help='dictionary size')
+    parser.add_argument('--poly_percent',type=float, help='percentage of ambiguous words')
 
     args=parser.parse_args()
     # with open(parser.en2zh_dict,'r') as dict:
@@ -183,7 +184,7 @@ if __name__=='__main__':
     zh_dict=process_f(args.emb_zh)
 
     if args.dict_wsd_produce:
-        wsd_dict_produce(args.emb_en,args.emb_zh,args.dict_test,args.dict_size)
+        wsd_dict_produce(args.emb_en,args.emb_zh,args.dict_test,args.dict_size,args.poly_percent)
     if args.dict_produce:
         dict_produce(args.emb_en,args.emb_zh)
 
