@@ -63,11 +63,11 @@ def wsd_dict_produce(emb_en,emb_zh,dict_test,dict_size,poly_percent):
 
 
 
-        with open('{0}.dict.wps_all_wsd.{1}.{2}'.format(emb_en,str(dict_size),str(i)),'w') as f:
+        with open('{0}_dict_wps.all.wsd_{1}_{2}'.format(emb_en,str(dict_size),str(i)),'w') as f:
             for entry in [wps_all_wsd[i] for i in wp_all_wsd_sample]:
                 f.write('\t'.join(entry)+'\n')
 
-        with open('{0}.dict.wps_all_nowsd.{1}.{2}'.format(emb_en,str(dict_size),str(i)),'w') as f:
+        with open('{0}_dict_wps.all.nowsd_{1}_{2}'.format(emb_en,str(dict_size),str(i)),'w') as f:
             for entry in [wps_all_nowsd[i] for i in wp_all_nowsd_sample]:
                 f.write('\t'.join(entry) + '\n')
 
@@ -80,11 +80,11 @@ def wsd_dict_produce(emb_en,emb_zh,dict_test,dict_size,poly_percent):
         #         f.write('\t'.join(entry) + '\n')
 
 
-        with open('{0}.dict.wps_mono_multiwsd.poly{3}.{1}.{2}'.format(emb_en, str(dict_size), str(i),str(poly_percent)), 'w') as f:
+        with open('{0}_dict_wps.mono.multiwsd_poly{3}_{1}_{2}'.format(emb_en, str(dict_size), str(i),str(poly_percent)), 'w') as f:
             for entry in [wps_multisense_wsd[i] for i in  wp_multisense_wsd_sample][:int(dict_size*poly_percent)]+[wps_monosense[i] for i in wp_monosense_sample][:int(dict_size*(1-poly_percent))]:
                 f.write('\t'.join(entry) + '\n')
 
-        with open('{0}.dict.wps_mono_multinowsd.poly{3}.{1}.{2}'.format(emb_en, str(dict_size), str(i),
+        with open('{0}_dict_wps.mono.multinowsd_poly{3}_{1}_{2}'.format(emb_en, str(dict_size), str(i),
                                                                           str(poly_percent)), 'w') as f:
                 for entry in [wps_multisense_nowsd[i] for i in wp_multisense_nowsd_sample][
                              :int(dict_size * poly_percent)] + [wps_monosense[i] for i in wp_monosense_sample][
