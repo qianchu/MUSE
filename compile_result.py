@@ -39,15 +39,17 @@ if __name__=='__main__':
     results=defaultdict(list)
     for root, dirs, files in os.walk(args.dir, topdown=False):
         for name in files:
-            name=name.rstrip('.log')
+
             if name.startswith('supervised_clusterwsd'):
+                result = extract_res(os.path.join(root, name))
+                name = name.rstrip('.log')
                 fields=name.split('_')
                 cluster_flag=fields[1]
                 model=fields[2:fields.index('100000')]
                 iteration=fields[-1]
                 dict_size=fields[-2]
                 poly_degree=fields[-3]
-                result=extract_res(os.path.join(root,name))
+
 
                 results[(cluster_flag,model,dict_size,poly_degree)].append(result)
 
