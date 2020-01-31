@@ -45,7 +45,7 @@ if __name__=='__main__':
                 name = name.rstrip('.log')
                 fields=name.split('_')
                 cluster_flag=fields[1]
-                model=fields[2:fields.index('100000')]
+                model='_'.join(fields[2:fields.index('100000')])
                 iteration=fields[-1]
                 dict_size=fields[-2]
                 poly_degree=fields[-3]
