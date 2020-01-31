@@ -40,7 +40,7 @@ if __name__=='__main__':
     for root, dirs, files in os.walk(args.dir, topdown=False):
         for name in files:
 
-            if name.startswith('supervised_clusterwsd') and '100000_cluster_wsd0_cwn_trans_wsd.clustered.0.en.vec' in name:
+            if name.startswith('supervised_clusterwsd') and 'wps.mono.multiwsd' in name and '100000_cluster_wsd0_cwn_trans_wsd.clustered.0.en.vec' in name:
                 result = extract_res(os.path.join(root, name))
                 name = name.rstrip('.log')
                 fields=name.split('_')
