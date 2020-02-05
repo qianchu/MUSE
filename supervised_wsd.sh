@@ -13,7 +13,7 @@ else
 cuda_flag=1
 fi
 
-declare -a cluster_flags=("cluster_wsd","cluster_wsd_random","clusterall")
+declare -a cluster_flags=("cluster_wsd" "cluster_wsd_random" "clusterall")
 
 
 for dict in ../../training_data/${model}_100000_cluster_wsd0_cwn_trans_wsd.clustered.0.en.vec_dict_wps.mono.multiwsd_poly*_${dict_size}_*
