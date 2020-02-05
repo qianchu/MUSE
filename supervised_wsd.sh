@@ -21,7 +21,7 @@ do
 
 for cluster_flag in "${cluster_flags[@]}"
 do
-echo"CUDA_VISIBLE_DEVICES=$cuda python supervised.py --src_lang en --tgt_lang $lg --src_emb ../../training_data/${model}_100000_${cluster_flag}0_cwn_trans_wsd.clustered.0.en.vec.clean --tgt_emb ../../training_data/${model}_100000_${cluster_flag}0_cwn_trans_wsd.clustered.0.$lg.vec.clean --n_refinement 60 --emb_dim 768 --dico_train $dict --cuda $cuda_flag --dico_eval ./data/crosslingual/dictionaries/en-zh.txt.unsup &> supervised_${cluster_flag}_$(basename $dict).log"
+echo "CUDA_VISIBLE_DEVICES=$cuda python supervised.py --src_lang en --tgt_lang $lg --src_emb ../../training_data/${model}_100000_${cluster_flag}0_cwn_trans_wsd.clustered.0.en.vec.clean --tgt_emb ../../training_data/${model}_100000_${cluster_flag}0_cwn_trans_wsd.clustered.0.$lg.vec.clean --n_refinement 60 --emb_dim 768 --dico_train $dict --cuda $cuda_flag --dico_eval ./data/crosslingual/dictionaries/en-zh.txt.unsup &> supervised_${cluster_flag}_$(basename $dict).log"
 CUDA_VISIBLE_DEVICES=$cuda python supervised.py --src_lang en --tgt_lang $lg --src_emb ../../training_data/${model}_100000_${cluster_flag}0_cwn_trans_wsd.clustered.0.en.vec.clean --tgt_emb ../../training_data/${model}_100000_${cluster_flag}0_cwn_trans_wsd.clustered.0.$lg.vec.clean --n_refinement 60 --emb_dim 768 --dico_train $dict --cuda $cuda_flag --dico_eval ./data/crosslingual/dictionaries/en-zh.txt.unsup &> supervised_${cluster_flag}_$(basename $dict).log
 
 done
