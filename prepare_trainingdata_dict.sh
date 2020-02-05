@@ -11,6 +11,6 @@ do
 for poly in $polys
 do
 echo "python prepare_trainingdata_dict.py --emb_en .$en_emb --emb_zh $zh_emb --dict_wsd_produce --dict_size $dict_size --poly_percent $poly --dict_test $test_dict"
-python prepare_trainingdata_dict.py --emb_en .$en_emb --emb_zh $zh_emb --dict_wsd_produce --dict_size $dict_size --poly_percent $poly --dict_test $test_dict
+python prepare_trainingdata_dict.py --emb_en $en_emb --emb_zh $zh_emb --dict_wsd_produce --dict_size $dict_size --poly_percent $poly --dict_test $test_dict
 done
 done
