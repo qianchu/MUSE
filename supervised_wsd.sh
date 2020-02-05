@@ -16,7 +16,7 @@ fi
 
 #declare -a cluster_flags=(cluster_flags)
 
-for cluster_flag in "$cluster_flags"
+for cluster_flag in $cluster_flags
 do
 
     if [ "$cluster_flag" == "clusterall" ]
@@ -25,7 +25,7 @@ do
     else
     dict_flag='wsd'
     fi
-    for dict_size in "$dict_sizes"
+    for dict_size in $dict_sizes
     do
         for dict in ../../training_data/${model}_100000_cluster_wsd0_cwn_trans_wsd.clustered.0.en.vec_dict_wps.mono.multi${dict_flag}_poly*_${dict_size}_*
         do
