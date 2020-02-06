@@ -5,9 +5,9 @@ cuda=$2
 lg=$3
 dict_sizes=$4
 cluster_flags=$5
-IFS=' ' # space is set as delimiter
-read -ra cluster_flags <<< "$cluster_flags"
-read -ra dict_sizes <<< "$dict_sizes"
+#IFS=' ' # space is set as delimiter
+#read -ra cluster_flags <<< "$cluster_flags"
+#read -ra dict_sizes <<< "$dict_sizes"
 
 if [ $cuda -lt 0 ]
 then
