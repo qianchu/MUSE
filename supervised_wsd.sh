@@ -16,10 +16,6 @@ else
 cuda_flag=1
 fi
 
-if [ "$model" == "zh_fasttext" ]
-then
-model_dict='zh_bert'
-fi
 
 #declare -a cluster_flags=(cluster_flags)
 
@@ -36,7 +32,7 @@ do
     do
         for dict in ../../training_data/${model_dict}_100000_cluster_wsd0_cwn_trans_wsd.clustered.0.en.vec_dict_wps.mono.multi${dict_flag}_poly*_${dict_size}_*
         do
-
+        dict_f=
 
 
 
