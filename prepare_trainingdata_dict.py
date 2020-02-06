@@ -52,13 +52,15 @@ def wsd_dict_produce(emb_en,emb_zh,dict_test,dict_size,poly_percent):
 
     wps_all_wsd=wps_multisense_wsd+wps_monosense
     wps_all_nowsd=wps_monosense+wps_multisense_nowsd
+    assert len(wps_all_wsd)==len(wps_all_nowsd)
+    assert len(wps_multisense_wsd) == len(wps_multisense_nowsd)
     # dictionary=list(set(en2zh_wps+zh2en_wps))
     for i in range(5):
 
         wp_all_wsd_sample=sample(list(range(len(wps_all_wsd))),dict_size)
-        wp_all_nowsd_sample=sample(list(range(len(wps_all_nowsd))),dict_size)
+        wp_all_nowsd_sample=wp_all_wsd_sample
         wp_multisense_wsd_sample=sample(list(range(len(wps_multisense_wsd))),dict_size)
-        wp_multisense_nowsd_sample=sample(list(range(len(wps_multisense_nowsd))),dict_size)
+        wp_multisense_nowsd_sample=wp_multisense_wsd_sample
         wp_monosense_sample=sample(list(range(len(wps_monosense))),dict_size)
 
 
