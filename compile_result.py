@@ -27,8 +27,8 @@ def print_result(results):
         for metric in metric2avgscore:
             for topn in metric2avgscore[metric]:
                 score=sum(metric2avgscore[metric][topn])/len(metric2avgscore[metric][topn])
-                print ('metric', 'topn','avg_score')
-                print (metric,topn, score)
+                print (key,'||','metric', 'topn','avg_score')
+                print (key,'||', metric,topn, score)
 
 if __name__=='__main__':
     import argparse
