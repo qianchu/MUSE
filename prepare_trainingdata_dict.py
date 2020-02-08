@@ -18,6 +18,18 @@ def process_f(emb):
             emb_f_out.write(line_new)
     return w_dict
 
+def update_wps_multisense_nowsd_select(wps_multisense_nowsd_select,wps_multisense_nowsd,en2zh_multisense,zh2en_multisense,i):
+            wps_multisense_nowsd_select.append(i)
+            wp = wps_multisense_nowsd[i]
+            if wp[0] in en2zh_multisense:
+                add_en=[i for i in en2zh_multisense[wp[0]] if i not in wps_multisense_nowsd_select]
+            if wp[1] in zh2en_multisense:
+                add_zh = [i for i in zh2en_multisense[wp[0]] if i not in wps_multisense_nowsd_select]
+            add=list(set(add_en+add_zh))
+            for add_i in add:
+                update_wps_multisense_nowsd_select(wps_multisense_nowsd_select, wps_multisense_nowsd, en2zh_multisense,
+                                                   zh2en_multisense, add_i)
+
 def wsd_dict_produce(emb_en,emb_zh,dict_test,dict_size,poly_percent):
     wps_multisense_nowsd=[]
     wps_multisense_wsd=[]
@@ -31,7 +43,10 @@ def wsd_dict_produce(emb_en,emb_zh,dict_test,dict_size,poly_percent):
 
     en_vocab=[line.split(' ')[0] for line in open(emb_en,'r')]
     zh_vocab=[line.split(' ')[0] for line in open(emb_zh,'r')]
+    en2zh_multisense={}
+    zh2en_multisense={}
     en_zh=list(zip(en_vocab,zh_vocab))
+    wps_multisense_counter=0
     for wp in en_zh:
         en=wp[0]
         zh=wp[1]
@@ -41,8 +56,11 @@ def wsd_dict_produce(emb_en,emb_zh,dict_test,dict_size,poly_percent):
             zh_w=zh
             if '.' in en:
                 en_w=en.split('.')[0]
+                en2zh_multisense[en_w].append(wps_multisense_counter)
             if '.' in zh:
                 zh_w=zh.split('.')[0]
+                zh2en_multisense[zh_w].append(wps_multisense_counter)
+            wps_multisense_counter+=1
 
             wps_multisense_nowsd.append((en_w,zh_w))
         else:
@@ -81,17 +99,25 @@ def wsd_dict_produce(emb_en,emb_zh,dict_test,dict_size,poly_percent):
         #     for entry in [wps_all[i] for i in wp_all_sample]:
         #         f.write('\t'.join(entry) + '\n')
 
+        wps_multisense_nowsd_select=[]
+        for i in wp_multisense_nowsd_sample:
+            update_wps_multisense_nowsd_select(wps_multisense_nowsd_select, wps_multisense_nowsd, en2zh_multisense,
+                                               zh2en_multisense, i)
+            if len(wps_multisense_nowsd_select)>=int(dict_size*poly_percent):
+                break
+        wps_multisense_wsd_select=wps_multisense_nowsd_select
 
         with open('{0}_dict_wps.mono.multiwsd_poly{3}_{1}_{2}'.format(emb_en, str(dict_size), str(i),str(poly_percent)), 'w') as f:
-            for entry in [wps_multisense_wsd[i] for i in  wp_multisense_wsd_sample][:int(dict_size*poly_percent)]+[wps_monosense[i] for i in wp_monosense_sample][:int(dict_size*(1-poly_percent))]:
+            for entry in [wps_multisense_wsd[i] for i in wps_multisense_wsd_select]+[wps_monosense[i] for i in wp_monosense_sample[:int(dict_size-len(wps_multisense_wsd_select))]]:
                 f.write('\t'.join(entry) + '\n')
 
         with open('{0}_dict_wps.mono.multinowsd_poly{3}_{1}_{2}'.format(emb_en, str(dict_size), str(i),
                                                                           str(poly_percent)), 'w') as f:
-                for entry in [wps_multisense_nowsd[i] for i in wp_multisense_nowsd_sample][
-                             :int(dict_size * poly_percent)] + [wps_monosense[i] for i in wp_monosense_sample][
-                                                               :int(dict_size * (1 - poly_percent))]:
-                    f.write('\t'.join(entry) + '\n')
+            for entry in [wps_multisense_wsd[i] for i in wps_multisense_nowsd_select] + [wps_monosense[i] for i in
+                                                                                       wp_monosense_sample[:int(
+                                                                                               dict_size - len(
+                                                                                                       wps_multisense_nowsd_select))]]:
+                f.write('\t'.join(entry) + '\n')
 
 
 
