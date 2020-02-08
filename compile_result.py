@@ -43,6 +43,10 @@ if __name__=='__main__':
             if name.startswith('supervised_cluster') and 'wps.mono.multi' in name and '100000_cluster_wsd0_cwn_trans_wsd.clustered.0.en.vec' in name:
                 result = extract_res(os.path.join(root, name))
                 name = name.rstrip('.log')
+                if 'dico_multi' in name:
+                    dico_multi='dico_multi'
+                else:
+                    dico_multi=''
                 fields=name.split('_')
                 cluster_flag=fields[1]
                 model='_'.join(fields[2:fields.index('100000')])
@@ -51,7 +55,7 @@ if __name__=='__main__':
                 poly_degree=fields[-3]
 
 
-                results[(cluster_flag,model,dict_size,poly_degree)].append(result)
+                results[(cluster_flag,model,dict_size,poly_degree,dico_multi)].append(result)
 
     print_result(results)
 
