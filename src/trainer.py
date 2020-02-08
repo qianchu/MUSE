@@ -166,7 +166,7 @@ class Trainer(object):
         tgt_emb = tgt_emb / tgt_emb.norm(2, 1, keepdim=True).expand_as(tgt_emb)
         self.dico = build_dictionary(src_emb, tgt_emb, self.params)
 
-    def procrustes(self):
+    def procrustes(self, no_align_flag):
         """
         Find the best orthogonal matrix mapping using the Orthogonal Procrustes problem
         https://en.wikipedia.org/wiki/Orthogonal_Procrustes_problem
@@ -174,9 +174,13 @@ class Trainer(object):
         A = self.src_emb.weight.data[self.dico[:, 0]]
         B = self.tgt_emb.weight.data[self.dico[:, 1]]
         W = self.mapping.weight.data
-        M = B.transpose(0, 1).mm(A).cpu().numpy()
-        U, S, V_t = scipy.linalg.svd(M, full_matrices=True)
-        W.copy_(torch.from_numpy(U.dot(V_t)).type_as(W))
+        if no_align_flag:
+            W.copy_(torch.eye(W.size[0]).type_as(W))
+        else:
+            M = B.transpose(0, 1).mm(A).cpu().numpy()
+            U, S, V_t = scipy.linalg.svd(M, full_matrices=True)
+
+            W.copy_(torch.from_numpy(U.dot(V_t)).type_as(W))
 
     def orthogonalize(self):
         """

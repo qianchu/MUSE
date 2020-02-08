@@ -51,7 +51,7 @@ parser.add_argument("--dico_max_size", type=int, default=0, help="Maximum genera
 parser.add_argument("--src_emb", type=str, default='', help="Reload source embeddings")
 parser.add_argument("--tgt_emb", type=str, default='', help="Reload target embeddings")
 parser.add_argument("--normalize_embeddings", type=str, default="", help="Normalize embeddings before training")
-
+parser.add_argument('--no_align', action="store_true", help='original embedding space evaluation')
 
 # parse parameters
 params = parser.parse_args()
@@ -88,13 +88,14 @@ for n_iter in range(params.n_refinement + 1):
 
     logger.info('Starting iteration %i...' % n_iter)
 
+
     # build a dictionary from aligned embeddings (unless
     # it is the first iteration and we use the init one)
     if n_iter > 0 or not hasattr(trainer, 'dico'):
         trainer.build_dictionary()
 
     # apply the Procrustes solution
-    trainer.procrustes()
+    trainer.procrustes(params.no_align)
 
     # embeddings evaluation
     to_log = OrderedDict({'n_iter': n_iter})
