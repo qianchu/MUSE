@@ -53,6 +53,7 @@ parser.add_argument("--tgt_emb", type=str, default='', help="Reload target embed
 parser.add_argument("--normalize_embeddings", type=str, default="", help="Normalize embeddings before training")
 parser.add_argument('--no_align', action="store_true", help='original embedding space evaluation')
 
+
 # parse parameters
 params = parser.parse_args()
 
@@ -66,6 +67,8 @@ assert os.path.isfile(params.src_emb)
 assert os.path.isfile(params.tgt_emb)
 assert params.dico_eval == 'default' or os.path.isfile(params.dico_eval)
 assert params.export in ["", "txt", "pth"]
+if params.no_align:
+    params.map_id_init=True
 
 # build logger / model / trainer / evaluator
 logger = initialize_exp(params)
