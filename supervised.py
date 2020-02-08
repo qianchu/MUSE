@@ -91,11 +91,13 @@ for n_iter in range(params.n_refinement + 1):
 
     # build a dictionary from aligned embeddings (unless
     # it is the first iteration and we use the init one)
-    if n_iter > 0 or not hasattr(trainer, 'dico'):
-        trainer.build_dictionary()
+    if not params.no_align:
 
-    # apply the Procrustes solution
-    trainer.procrustes(params.no_align)
+        if n_iter > 0 or not hasattr(trainer, 'dico'):
+            trainer.build_dictionary()
+
+        # apply the Procrustes solution
+        trainer.procrustes()
 
     # embeddings evaluation
     to_log = OrderedDict({'n_iter': n_iter})
