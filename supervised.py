@@ -53,7 +53,7 @@ parser.add_argument("--tgt_emb", type=str, default='', help="Reload target embed
 parser.add_argument("--normalize_embeddings", type=str, default="", help="Normalize embeddings before training")
 parser.add_argument('--no_align', action="store_true", help='original embedding space evaluation')
 parser.add_argument('--dico_multi', action="store_true", help='original embedding space dict for bert multilingual')
-
+parser.add_argument('--map_id_init', action='store_true', help='whether to initialize mapping with identity matrix')
 
 # parse parameters
 params = parser.parse_args()
