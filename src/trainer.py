@@ -140,7 +140,15 @@ class Trainer(object):
 
         if dico_multi:
             self.build_dictionary()
+            logger.info("Found %i pairs of words after building vocab from bert multi  "
+
+                        % (len(self.dico)
+                           ))
             addition_dict = load_dictionary(dico_train, word2id1, word2id2)
+            logger.info("Found %i pairs of words from dict  "
+
+                        % (len(addition_dict)
+                           ))
             words_addition_dict_0 = {addition_dict[i, 0]: True for i in range(len(addition_dict))}
             words_addition_dict_1 = {addition_dict[i, 1]: True for i in range(len(addition_dict))}
             words_addition_pairs = [(addition_dict[i, 0], addition_dict[i, 1]) for i in range(len(addition_dict))]
