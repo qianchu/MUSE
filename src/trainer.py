@@ -144,8 +144,8 @@ class Trainer(object):
             words_addition_dict_0 = {addition_dict[i, 0]: True for i in range(len(addition_dict))}
             words_addition_dict_1 = {addition_dict[i, 1]: True for i in range(len(addition_dict))}
             words_addition_pairs = [(addition_dict[i, 0], addition_dict[i, 1]) for i in range(len(addition_dict))]
-            filtered_dict_pairs = [(self.dict[i, 0], self.dict[i, 1]) for i in range(len(self.dict)) if
-                                   self.dict[i, 0] not in words_addition_dict_0 and self.dict[
+            filtered_dict_pairs = [(self.dico[i, 0], self.dico[i, 1]) for i in range(len(self.dico)) if
+                                   self.dico[i, 0] not in words_addition_dict_0 and self.dico[
                                        i, 1] not in words_addition_dict_1]
             pairs = filtered_dict_pairs + words_addition_pairs
             pairs = sorted(pairs, key=lambda x: x[0])
