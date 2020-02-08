@@ -131,32 +131,52 @@ class Trainer(object):
 
         return 2 * self.params.batch_size
 
-    def load_training_dico(self, dico_train):
+    def load_training_dico(self, dico_train,dico_multi=False):
         """
         Load training dictionary.
         """
         word2id1 = self.src_dico.word2id
         word2id2 = self.tgt_dico.word2id
 
-        # identical character strings
-        if dico_train == "identical_char":
-            self.dico = load_identical_char_dico(word2id1, word2id2)
-        # use one of the provided dictionary
-        elif dico_train == "default":
-            filename = '%s-%s.0-5000.txt' % (self.params.src_lang, self.params.tgt_lang)
-            self.dico = load_dictionary(
-                os.path.join(DIC_EVAL_PATH, filename),
-                word2id1, word2id2
-            )
-        # use dico from embedding
-        elif dico_train == 'multi_bert':
+        if dico_multi:
             self.build_dictionary()
-            addition = load_dictionary(dico_train, word2id1, word2id2)
+            addition_dict = load_dictionary(dico_train, word2id1, word2id2)
+            words_addition_dict_0 = {addition_dict[i, 0]: True for i in range(len(addition_dict))}
+            words_addition_dict_1 = {addition_dict[i, 1]: True for i in range(len(addition_dict))}
+            words_addition_pairs = [(addition_dict[i, 0], addition_dict[i, 1]) for i in range(len(addition_dict))]
+            filtered_dict_pairs = [(self.dict[i, 0], self.dict[i, 1]) for i in range(len(self.dict)) if
+                                   self.dict[i, 0] not in words_addition_dict_0 and self.dict[
+                                       i, 1] not in words_addition_dict_1]
+            pairs = filtered_dict_pairs + words_addition_pairs
+            pairs = sorted(pairs, key=lambda x: x[0])
+            logger.info("Found %i pairs of words in the dictionary (%i unique). "
 
-        # dictionary provided by the user
-
+                        % (len(pairs), len(set([x for x, _ in pairs])),
+                           ))
+            dico = torch.LongTensor(len(pairs), 2)
+            for i, (word1, word2) in enumerate(pairs):
+                dico[i, 0] = word2id1[word1]
+                dico[i, 1] = word2id2[word2]
+            self.dico = dico
         else:
-            self.dico = load_dictionary(dico_train, word2id1, word2id2)
+            # identical character strings
+            if dico_train == "identical_char":
+                self.dico = load_identical_char_dico(word2id1, word2id2)
+            # use one of the provided dictionary
+            elif dico_train == "default":
+                filename = '%s-%s.0-5000.txt' % (self.params.src_lang, self.params.tgt_lang)
+                self.dico = load_dictionary(
+                    os.path.join(DIC_EVAL_PATH, filename),
+                    word2id1, word2id2
+                )
+
+
+
+
+            # dictionary provided by the user
+
+            else:
+                self.dico = load_dictionary(dico_train, word2id1, word2id2)
 
         # cuda
         if self.params.cuda:
