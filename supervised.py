@@ -52,6 +52,7 @@ parser.add_argument("--src_emb", type=str, default='', help="Reload source embed
 parser.add_argument("--tgt_emb", type=str, default='', help="Reload target embeddings")
 parser.add_argument("--normalize_embeddings", type=str, default="", help="Normalize embeddings before training")
 parser.add_argument('--no_align', action="store_true", help='original embedding space evaluation')
+parser.add_argument('--dico_multi', action="store_true", help='original embedding space dict for bert multilingual')
 
 
 # parse parameters
@@ -78,7 +79,7 @@ evaluator = Evaluator(trainer)
 
 # load a training dictionary. if a dictionary path is not provided, use a default
 # one ("default") or create one based on identical character strings ("identical_char")
-trainer.load_training_dico(params.dico_train)
+trainer.load_training_dico(params.dico_train,params.dico_multi)
 
 # define the validation metric
 VALIDATION_METRIC = VALIDATION_METRIC_UNSUP if params.dico_train == 'identical_char' else VALIDATION_METRIC_SUP
