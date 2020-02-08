@@ -155,8 +155,8 @@ class Trainer(object):
                            ))
             dico = torch.LongTensor(len(pairs), 2)
             for i, (word1, word2) in enumerate(pairs):
-                dico[i, 0] = word2id1[word1]
-                dico[i, 1] = word2id2[word2]
+                dico[i, 0] = word1
+                dico[i, 1] = word2
             self.dico = dico
         else:
             # identical character strings
