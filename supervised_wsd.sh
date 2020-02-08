@@ -6,6 +6,8 @@ lg=$3
 dict_sizes=$4
 cluster_flags=$5
 dim=$6
+dico_multi=${7:-""}
+
 #IFS=' ' # space is set as delimiter
 #read -ra cluster_flags <<< "$cluster_flags"
 #read -ra dict_sizes <<< "$dict_sizes"
@@ -35,8 +37,8 @@ do
         do
 
 
-        echo "CUDA_VISIBLE_DEVICES=$cuda python supervised.py --src_lang en --tgt_lang $lg --src_emb ../../training_data/${model}_100000_${cluster_flag}0_cwn_trans_wsd.clustered.0.en.vec.clean --tgt_emb ../../training_data/${model}_100000_${cluster_flag}0_cwn_trans_wsd.clustered.0.$lg.vec.clean --n_refinement 60 --emb_dim $dim --dico_train $dict --cuda $cuda_flag --dico_eval ./data/crosslingual/dictionaries/en-zh.txt.unsup &> supervised_${cluster_flag}_$(basename $dict).log"
-        CUDA_VISIBLE_DEVICES=$cuda python supervised.py --src_lang en --tgt_lang $lg --src_emb ../../training_data/${model}_100000_${cluster_flag}0_cwn_trans_wsd.clustered.0.en.vec.clean --tgt_emb ../../training_data/${model}_100000_${cluster_flag}0_cwn_trans_wsd.clustered.0.$lg.vec.clean --n_refinement 60 --emb_dim $dim --dico_train $dict --cuda $cuda_flag --dico_eval ./data/crosslingual/dictionaries/en-zh.txt.unsup &> supervised_${cluster_flag}_$(basename $dict).log
+        echo "        CUDA_VISIBLE_DEVICES=$cuda python supervised.py --src_lang en --tgt_lang $lg --src_emb ../../training_data/${model}_100000_${cluster_flag}0_cwn_trans_wsd.clustered.0.en.vec.clean --tgt_emb ../../training_data/${model}_100000_${cluster_flag}0_cwn_trans_wsd.clustered.0.$lg.vec.clean --n_refinement 60 --emb_dim $dim --dico_train $dict --cuda $cuda_flag --dico_eval ./data/crosslingual/dictionaries/en-zh.txt.unsup $dico_multi &> supervised_${cluster_flag}_$(basename $dict)${dico_multi}.log"
+        CUDA_VISIBLE_DEVICES=$cuda python supervised.py --src_lang en --tgt_lang $lg --src_emb ../../training_data/${model}_100000_${cluster_flag}0_cwn_trans_wsd.clustered.0.en.vec.clean --tgt_emb ../../training_data/${model}_100000_${cluster_flag}0_cwn_trans_wsd.clustered.0.$lg.vec.clean --n_refinement 60 --emb_dim $dim --dico_train $dict --cuda $cuda_flag --dico_eval ./data/crosslingual/dictionaries/en-zh.txt.unsup $dico_multi &> supervised_${cluster_flag}_$(basename $dict)${dico_multi}.log
 
         done
     done
