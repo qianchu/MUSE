@@ -67,8 +67,6 @@ assert os.path.isfile(params.src_emb)
 assert os.path.isfile(params.tgt_emb)
 assert params.dico_eval == 'default' or os.path.isfile(params.dico_eval)
 assert params.export in ["", "txt", "pth"]
-if params.no_align or params.dico_multi:
-    params.map_id_init=True
 
 # build logger / model / trainer / evaluator
 logger = initialize_exp(params)
