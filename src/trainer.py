@@ -175,7 +175,7 @@ class Trainer(object):
         B = self.tgt_emb.weight.data[self.dico[:, 1]]
         W = self.mapping.weight.data
         if no_align_flag:
-            W.copy_(torch.eye(W.size[0]).type_as(W))
+            W.copy_(torch.eye(W.size()[0]).type_as(W))
         else:
             M = B.transpose(0, 1).mm(A).cpu().numpy()
             U, S, V_t = scipy.linalg.svd(M, full_matrices=True)
