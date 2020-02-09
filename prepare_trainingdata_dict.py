@@ -50,6 +50,7 @@ def wsd_dict_produce(emb_en,emb_zh,dict_test,dict_size,poly_percent):
     en2zh_multisense=defaultdict(list)
     zh2en_multisense=defaultdict(list)
     en_zh=list(zip(en_vocab,zh_vocab))
+    en_zh=list(set(en_zh))
     wps_multisense_counter=0
     for wp in en_zh:
         en=wp[0]
