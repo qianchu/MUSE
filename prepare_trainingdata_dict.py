@@ -105,18 +105,21 @@ def wsd_dict_produce(emb_en,emb_zh,dict_test,dict_size,poly_percent):
         #     for entry in [wps_all[i] for i in wp_all_sample]:
         #         f.write('\t'.join(entry) + '\n')
 
-        wps_multisense_nowsd_select=[]
+        wps_multisense_nowsd_select=wp_multisense_nowsd_sample[:int(dict_size*poly_percent)]
+        wps_multisense_wsd_select=wp_multisense_wsd_sample[:int(dict_size*poly_percent)]
 
-        for sample_i in wp_multisense_nowsd_sample:
-            wps_multisense_nowsd_select_prev=deepcopy(wps_multisense_nowsd_select)
 
-            update_wps_multisense_nowsd_select(wps_multisense_nowsd_select, wps_multisense_nowsd, en2zh_multisense,
-                                               zh2en_multisense, sample_i)
-            print(sample_i, len(wps_multisense_nowsd_select))
-            if len(wps_multisense_nowsd_select)>int(dict_size*poly_percent):
-                wps_multisense_nowsd_select=wps_multisense_nowsd_select_prev
-                break
-        wps_multisense_wsd_select=wps_multisense_nowsd_select
+
+        # for sample_i in wp_multisense_nowsd_sample:
+        #     wps_multisense_nowsd_select_prev=deepcopy(wps_multisense_nowsd_select)
+        #
+        #     update_wps_multisense_nowsd_select(wps_multisense_nowsd_select, wps_multisense_nowsd, en2zh_multisense,
+        #                                        zh2en_multisense, sample_i)
+        #     print(sample_i, len(wps_multisense_nowsd_select))
+        #     if len(wps_multisense_nowsd_select)>int(dict_size*poly_percent):
+        #         wps_multisense_nowsd_select=wps_multisense_nowsd_select_prev
+        #         break
+        # wps_multisense_wsd_select=wps_multisense_nowsd_select
 
         monosense_len=int(dict_size)-len(wps_multisense_wsd_select)
         if monosense_len<0:
