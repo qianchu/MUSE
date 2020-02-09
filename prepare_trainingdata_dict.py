@@ -43,8 +43,8 @@ def wsd_dict_produce(emb_en,emb_zh,dict_test,dict_size,poly_percent):
 
     en_vocab=[line.split(' ')[0] for line in open(emb_en,'r')]
     zh_vocab=[line.split(' ')[0] for line in open(emb_zh,'r')]
-    en2zh_multisense={}
-    zh2en_multisense={}
+    en2zh_multisense=defaultdict(list)
+    zh2en_multisense=defaultdict(list)
     en_zh=list(zip(en_vocab,zh_vocab))
     wps_multisense_counter=0
     for wp in en_zh:
