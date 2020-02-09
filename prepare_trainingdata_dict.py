@@ -21,7 +21,7 @@ def process_f(emb):
 def update_wps_multisense_nowsd_select(wps_multisense_nowsd_select,wps_multisense_nowsd,en2zh_multisense,zh2en_multisense,i):
             wps_multisense_nowsd_select.append(i)
             wp = wps_multisense_nowsd[i]
-            print (wp)
+            print (i,wp)
             add=[]
             if wp[0] in en2zh_multisense:
                 add_en=[i for i in en2zh_multisense[wp[0]] if i not in wps_multisense_nowsd_select]
