@@ -19,20 +19,21 @@ def process_f(emb):
     return w_dict
 
 def update_wps_multisense_nowsd_select(wps_multisense_nowsd_select,wps_multisense_nowsd,en2zh_multisense,zh2en_multisense,i):
-            wps_multisense_nowsd_select.append(i)
-            wp = wps_multisense_nowsd[i]
-            print (i,wp)
-            add=[]
-            if wp[0] in en2zh_multisense:
-                add_en=[i for i in en2zh_multisense[wp[0]] if i not in wps_multisense_nowsd_select]
-                add+=add_en
-            if wp[1] in zh2en_multisense:
-                add_zh = [i for i in zh2en_multisense[wp[0]] if i not in wps_multisense_nowsd_select]
-                add+=add_zh
-            add=list(set(add))
-            for add_i in add:
-                update_wps_multisense_nowsd_select(wps_multisense_nowsd_select, wps_multisense_nowsd, en2zh_multisense,
-                                                   zh2en_multisense, add_i)
+            if i not in wps_multisense_nowsd_select:
+                wps_multisense_nowsd_select.append(i)
+                wp = wps_multisense_nowsd[i]
+                print (i,wp)
+                add=[]
+                if wp[0] in en2zh_multisense:
+                    add_en=[i for i in en2zh_multisense[wp[0]] if i not in wps_multisense_nowsd_select]
+                    add+=add_en
+                if wp[1] in zh2en_multisense:
+                    add_zh = [i for i in zh2en_multisense[wp[0]] if i not in wps_multisense_nowsd_select]
+                    add+=add_zh
+                add=list(set(add))
+                for add_i in add:
+                    update_wps_multisense_nowsd_select(wps_multisense_nowsd_select, wps_multisense_nowsd, en2zh_multisense,
+                                                       zh2en_multisense, add_i)
 
 def wsd_dict_produce(emb_en,emb_zh,dict_test,dict_size,poly_percent):
     wps_multisense_nowsd=[]
