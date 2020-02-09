@@ -106,9 +106,10 @@ def wsd_dict_produce(emb_en,emb_zh,dict_test,dict_size,poly_percent):
 
         for sample_i in wp_multisense_nowsd_sample:
             wps_multisense_nowsd_select_prev=deepcopy(wps_multisense_nowsd_select)
-            print (sample_i,len(wps_multisense_nowsd_select))
+
             update_wps_multisense_nowsd_select(wps_multisense_nowsd_select, wps_multisense_nowsd, en2zh_multisense,
                                                zh2en_multisense, sample_i)
+            print(sample_i, len(wps_multisense_nowsd_select))
             if len(wps_multisense_nowsd_select)>int(dict_size*poly_percent):
                 wps_multisense_nowsd_select=wps_multisense_nowsd_select_prev
                 break
