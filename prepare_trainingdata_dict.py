@@ -129,7 +129,7 @@ def wsd_dict_produce(emb_en,emb_zh,dict_test,dict_size,poly_percent):
 
         with open('{0}_dict_wps.mono.multinowsd_poly{3}_{1}_{2}'.format(emb_en, str(dict_size), str(i),
                                                                           str(poly_percent)), 'w') as f:
-            for entry in [wps_multisense_wsd[i] for i in wps_multisense_nowsd_select] + [wps_monosense[i] for i in
+            for entry in [wps_multisense_nowsd[i] for i in wps_multisense_nowsd_select] + [wps_monosense[i] for i in
                                                                                        wp_monosense_sample[:monosense_len]]:
                 f.write('\t'.join(entry) + '\n')
 
